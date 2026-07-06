@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Lead Desk — Real Estate with Bhavik</title>
+
+<style>
+/* ============================================================
+   DESIGN — brand colours. Change them here.
+   ============================================================ */
+:root{
+  --bg:        #152E21;   /* deep forest green background */
+  --bg2:       #1B382A;   /* card / panel background */
+  --bg3:       #224434;   /* hover / raised background */
+  --ink:       #F0EDE6;   /* warm cream text */
+  --sage:      #B8D4C4;   /* muted sage secondary text */
+  --gold:      #E8C96A;   /* warm gold accent */
+  --red:       #E2725B;   /* overdue / hot */
+  --amber:     #E8A75A;   /* due today / stale */
+  --cold:      #8FB8CB;   /* cold leads */
+  --line:      rgba(240,237,230,.12);  /* hairline borders */
+  --serif:     Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --sans:      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html,body{ height:100%; }
+body{
+  background:var(--bg); color:var(--ink);
+  font:15px/1.5 var(--sans);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{ font-family:var(--serif); font-weight:600; letter-spacing:.2px; }
+button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+input,select,textarea{
+  font:inherit; color:var(--ink);
+  background:rgba(0,0,0,.22); border:1px solid var(--line);
+  border-radius:9px; padding:8px 11px; outline:none; max-width:100%;
+}
+input:focus,select:focus,textarea:focus{ border-color:var(--gold); }
+select option{ background:var(--bg2); color:var(--ink); }
+::placeholder{ color:rgba(240,237,230,.4); }
+input[type="date"]{ color-scheme:dark; }
+
+/* ---------- header ---------- */
+header{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:14px 22px 10px;
+}
+.brand{ display:flex; align-items:baseline; gap:10px; }
+.brand h1{ font-size:19px; }
+.brand .tag{ font-size:11px; color:var(--sage); letter-spacing:1.5px; text-transform:uppercase; }
+nav{ display:flex; gap:4px; background:rgba(0,0,0,.2); border:1px solid var(--line); border-radius:11px; padding:3px; }
+nav button{
+  padding:6px 14px; border-radius:8px; color:var(--sage); font-size:14px;
+  display:flex; align-items:center; gap:6px;
+}
+nav button.on{ background:var(--bg3); color:var(--ink); }
+.badge{
+  min-width:19px; padding:1px 5px; border-radius:99px; text-align:center;
+  background:var(--red); color:#fff; font-size:11px; font-weight:600;
+}
+.hd-right{ margin-left:auto; display:flex; align-items:center; gap:12px; }
+.syncdot{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--sage); }
+.syncdot i{ width:9px; height:9px; border-radius:50%; background:#8b8b8b; display:inline-block; }
+.syncdot.synced i{ background:#7CC98A; }
+.syncdot.error  i{ background:var(--red); }
+.syncdot.syncing i{ background:var(--amber); }
+.menu-wrap{ position:relative; }
+.menu-btn{ font-size:20px; padding:2px 10px; border:1px solid var(--line); border-radius:9px; color:var(--sage); }
+.menu{
+  position:absolute; right:0; top:110%; z-index:60; display:none; min-width:200px;
+  background:var(--bg2); border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 12px 34px rgba(0,0,0,.45); overflow:hidden; padding:5px;
+}
+.menu.open{ display:block; }
+.menu button{ display:block; width:100%; text-align:left; padding:9px 12px; border-radius:8px; font-size:14px; }
+.menu button:hover{ background:var(--bg3); }
+
+/* ---------- add-lead + filter bars ---------- */
+.bars{ padding:4px 22px 14px; display:flex; flex-direction:column; gap:10px; }
+.addbar{ display:flex; gap:10px; align-items:center; }
+.addbar input{ flex:1; max-width:420px; }
+.addbar .hint{ font-size:12px; color:var(--sage); opacity:.75; }
+.addbar button{
+  background:var(--gold); color:#20301F; font-weight:600;
+  padding:8px 16px; border-radius:9px;
+}
+.filters{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.chip{
+  padding:4px 13px; border-radius:99px; border:1px solid var(--line);
+  font-size:13px; color:var(--sage);
+}
+.chip.on{ color:var(--ink); border-color:currentColor; }
+.chip.hot.on{ color:var(--red); background:rgba(226,114,91,.13); }
+.chip.warm.on{ color:var(--gold); background:rgba(232,201,106,.13); }
+.chip.cold.on{ color:var(--cold); background:rgba(143,184,203,.13); }
+.filters select{ padding:5px 9px; font-size:13px; }
+.filters .search{ padding:5px 11px; font-size:13px; width:190px; }
+.clear-f{ font-size:13px; color:var(--amber); text-decoration:underline; }
+
+main{ padding:0 22px 90px; }
+
+/* ---------- board ---------- */
+.board{ display:flex; gap:12px; align-items:flex-start; overflow-x:auto; padding-bottom:14px; }
+.col{
+  flex:1 1 0; min-width:172px;
+  background:rgba(0,0,0,.16); border:1px solid var(--line); border-radius:14px;
+}
+.col.money{ border-color:rgba(232,201,106,.4); }
+.col h3{
+  font-size:14px; padding:11px 13px 8px; color:var(--sage);
+  display:flex; justify-content:space-between; align-items:baseline;
+  border-bottom:1px solid var(--line);
+}
+.col.money h3{ color:var(--gold); }
+.col .cnt{ font-family:var(--sans); font-size:12px; opacity:.8; }
+.col-body{ padding:9px; display:flex; flex-direction:column; gap:8px; min-height:70px; }
+.col-body.dragover{ background:rgba(232,201,106,.07); border-radius:0 0 14px 14px; }
+.card{
+  background:var(--bg2); border:1px solid var(--line); border-radius:11px;
+  padding:10px 12px; cursor:pointer;
+}
+.card:hover{ background:var(--bg3); }
+.card.glow{
+  border-color:rgba(232,201,106,.55);
+  box-shadow:0 0 14px rgba(232,201,106,.14);
+}
+.card .nm{ font-weight:600; font-size:14px; display:flex; gap:6px; align-items:center; }
+.card .nm .star{ color:var(--gold); font-size:12px; }
+.card .stale{ width:7px; height:7px; border-radius:50%; background:var(--amber); margin-left:auto; flex:none; }
+.card .meta{ font-size:12px; color:var(--sage); margin-top:3px; display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+.card .act{ font-size:12px; color:var(--ink); opacity:.85; margin-top:5px; }
+.pill{
+  font-size:11px; padding:1px 8px; border-radius:99px;
+  border:1px solid var(--line); color:var(--sage); white-space:nowrap;
+}
+.pill.overdue{ color:var(--red); border-color:rgba(226,114,91,.5); }
+.pill.today{ color:var(--amber); border-color:rgba(232,167,90,.5); }
+.temp{ font-size:11px; font-weight:600; }
+.temp.Hot{ color:var(--red); } .temp.Warm{ color:var(--gold); } .temp.Cold{ color:var(--cold); }
+.extag{ font-size:10px; color:var(--bg); background:var(--sage); border-radius:4px; padding:0 5px; }
+
+/* ---------- follow-ups ---------- */
+.fu-group h2{ font-size:16px; margin:20px 0 9px; display:flex; gap:9px; align-items:baseline; }
+.fu-group h2 small{ font-family:var(--sans); font-size:12px; color:var(--sage); }
+.fu-group.overdue h2{ color:var(--red); }
+.fu-group.today   h2{ color:var(--amber); }
+.fu-group.soon    h2{ color:var(--sage); }
+.fu-row{
+  background:var(--bg2); border:1px solid var(--line); border-radius:12px;
+  padding:11px 14px; margin-bottom:8px;
+  display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+}
+.fu-main{ flex:1; min-width:210px; cursor:pointer; }
+.fu-main .nm{ font-weight:600; }
+.fu-main .sub{ font-size:12.5px; color:var(--sage); margin-top:2px; }
+.fu-main .note{ font-size:12.5px; opacity:.75; margin-top:2px; font-style:italic;
+  max-width:520px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fu-actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.btn{
+  border:1px solid var(--line); border-radius:9px; padding:6px 13px;
+  font-size:13px; color:var(--ink); white-space:nowrap;
+}
+.btn:hover{ background:var(--bg3); }
+.btn.wa{ color:#8FE3A5; border-color:rgba(143,227,165,.4); }
+.btn.gold{ background:var(--gold); color:#20301F; border-color:var(--gold); font-weight:600; }
+.btn.sm{ padding:4px 10px; font-size:12.5px; }
+.sched{ display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:13px; }
+.sched .lbl{ color:var(--gold); font-weight:600; margin-right:2px; }
+.allclear{ text-align:center; padding:70px 0; color:var(--sage); }
+.allclear .big{ font-family:var(--serif); font-size:22px; color:var(--ink); margin-bottom:6px; }
+
+/* ---------- pipeline ---------- */
+.pipe{ max-width:860px; }
+.statrow{ display:flex; gap:12px; flex-wrap:wrap; margin:14px 0 26px; }
+.stat{
+  flex:1; min-width:130px; background:var(--bg2); border:1px solid var(--line);
+  border-radius:13px; padding:14px 16px;
+}
+.stat .n{ font-family:var(--serif); font-size:28px; }
+.stat .l{ font-size:12px; color:var(--sage); text-transform:uppercase; letter-spacing:1px; }
+.pipe h2{ font-size:17px; margin:26px 0 12px; }
+.frow{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.frow .fl{ width:120px; font-size:13px; color:var(--sage); text-align:right; flex:none; }
+.frow.money .fl{ color:var(--gold); }
+.frow .ftrack{ flex:1; }
+.frow .fbar{ height:22px; border-radius:6px; background:var(--sage); opacity:.85; min-width:2px; }
+.frow.money .fbar{ background:var(--gold); }
+.frow .fn{ width:30px; font-size:13px; flex:none; }
+.attn{ background:var(--bg2); border:1px solid rgba(232,167,90,.4); border-radius:13px; padding:14px 18px; }
+.attn ul{ list-style:none; }
+.attn li{ padding:6px 0; border-bottom:1px solid var(--line); font-size:14px; cursor:pointer; display:flex; gap:9px; flex-wrap:wrap; }
+.attn li:last-child{ border-bottom:none; }
+.attn li:hover .nm{ text-decoration:underline; }
+.attn .why{ color:var(--amber); font-size:12.5px; }
+.attn .why.od{ color:var(--red); }
+.attn .ok{ color:var(--sage); padding:4px 0; }
+.srcgrid{ display:grid; grid-template-columns:130px 1fr 90px; gap:8px 12px; align-items:center; font-size:13.5px; max-width:640px; }
+.srcgrid .sl{ color:var(--sage); text-align:right; }
+.srcgrid .sbar{ height:16px; border-radius:5px; background:var(--sage); opacity:.8; min-width:2px; }
+.srcgrid .sn{ color:var(--sage); } .srcgrid .sn b{ color:var(--gold); }
+
+/* ---------- table ---------- */
+.tblwrap{ overflow-x:auto; border:1px solid var(--line); border-radius:13px; }
+table{ border-collapse:collapse; width:100%; font-size:13.5px; }
+th,td{ padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap; }
+th{ font-size:12px; color:var(--sage); text-transform:uppercase; letter-spacing:.6px; cursor:pointer; user-select:none; position:sticky; top:0; background:var(--bg2); }
+th:hover{ color:var(--ink); }
+tbody tr{ cursor:pointer; }
+tbody tr:hover{ background:var(--bg3); }
+
+/* ---------- side panel ---------- */
+.ovl{ position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:80; display:none; }
+.ovl.open{ display:block; }
+.panel{
+  position:fixed; top:0; right:0; bottom:0; z-index:90; width:430px; max-width:100vw;
+  background:var(--bg2); border-left:1px solid var(--line);
+  transform:translateX(103%); transition:transform .22s ease; overflow-y:auto;
+  padding:22px 24px 50px;
+}
+.panel.open{ transform:none; }
+.panel h2{ font-size:21px; padding-right:36px; }
+.panel .close{ position:absolute; top:14px; right:16px; font-size:22px; color:var(--sage); padding:4px 8px; }
+.panel h4{
+  font-family:var(--sans); font-size:11.5px; letter-spacing:1.4px; text-transform:uppercase;
+  color:var(--gold); margin:24px 0 10px; border-bottom:1px solid var(--line); padding-bottom:5px;
+}
+.fgrid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 12px; }
+.fld{ display:flex; flex-direction:column; gap:4px; }
+.fld.wide{ grid-column:1/-1; }
+.fld label{ font-size:11.5px; color:var(--sage); }
+.fld input,.fld select{ width:100%; padding:7px 10px; font-size:14px; }
+.logbox{ display:flex; gap:8px; margin-bottom:12px; }
+.logbox textarea{ flex:1; min-height:38px; resize:vertical; font-size:13.5px; }
+.logline{ padding:7px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+.logline time{ display:block; font-size:11px; color:var(--sage); }
+.danger{ margin-top:30px; display:flex; gap:10px; }
+.danger button{ font-size:13px; color:var(--red); border:1px solid rgba(226,114,91,.4); border-radius:9px; padding:6px 13px; }
+
+/* ---------- login ---------- */
+.login{
+  position:fixed; inset:0; z-index:200; background:var(--bg);
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.login.open{ display:flex; }
+.login .box{ width:340px; max-width:100%; text-align:center; }
+.login h1{ font-size:24px; margin-bottom:4px; }
+.login p{ color:var(--sage); font-size:13.5px; margin-bottom:22px; }
+.login input{ width:100%; margin-bottom:10px; padding:11px 13px; }
+.login button{ width:100%; background:var(--gold); color:#20301F; font-weight:600; border-radius:9px; padding:11px; }
+.login .err{ color:var(--red); font-size:13px; min-height:20px; margin-top:10px; }
+
+/* ---------- toast ---------- */
+#toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(80px);
+  background:var(--bg3); border:1px solid var(--line); color:var(--ink);
+  padding:9px 18px; border-radius:99px; font-size:13.5px; z-index:300;
+  transition:transform .25s ease; box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+#toast.show{ transform:translateX(-50%); }
+
+/* ---------- mobile ---------- */
+@media (max-width:700px){
+  header{ padding:12px 14px 8px; gap:10px; }
+  .bars,main{ padding-left:14px; padding-right:14px; }
+  nav{ order:3; width:100%; justify-content:space-between; }
+  nav button{ padding:6px 8px; font-size:13px; }
+  .brand h1{ font-size:16px; } .brand .tag{ display:none; }
+  .addbar .hint{ display:none; }
+  .fu-row{ align-items:flex-start; flex-direction:column; gap:8px; }
+  .panel{ width:100vw; }
+  .fgrid{ grid-template-columns:1fr; }
+  .srcgrid{ grid-template-columns:90px 1fr 84px; }
+  .frow .fl{ width:92px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN (only shows when Supabase is configured) ============ -->
+<div class="login" id="login">
+  <div class="box">
+    <h1>Real Estate with Bhavik</h1>
+    <p>Lead Desk — sign in to continue</p>
+    <input type="email" id="li-email" placeholder="Email" autocomplete="username">
+    <input type="password" id="li-pass" placeholder="Password" autocomplete="current-password">
+    <button id="li-btn">Sign in</button>
+    <div class="err" id="li-err"></div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="brand">
+    <h1>Real Estate with Bhavik</h1>
+    <span class="tag">Lead&nbsp;Desk</span>
+  </div>
+  <nav id="tabs">
+    <button data-v="board">Board</button>
+    <button data-v="followups">Follow-ups <span class="badge" id="fu-badge" style="display:none">0</span></button>
+    <button data-v="pipeline">Pipeline</button>
+    <button data-v="table">Table</button>
+  </nav>
+  <div class="hd-right">
+    <span class="syncdot" id="syncdot"><i></i><span id="synctxt">Local</span></span>
+    <div class="menu-wrap">
+      <button class="menu-btn" id="menu-btn" title="Menu">&#8943;</button>
+      <div class="menu" id="menu">
+        <button id="m-export">Export backup (.json)</button>
+        <button id="m-import">Import backup</button>
+        <button id="m-clearex">Clear example leads</button>
+        <button id="m-signout" style="display:none">Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ADD LEAD + FILTERS ============ -->
+<div class="bars">
+  <div class="addbar">
+    <input id="add-input" placeholder="Add lead — type a name, press Enter">
+    <button id="add-btn">Add</button>
+    <span class="hint">defaults: New · follow-up in 2 days</span>
+  </div>
+  <div class="filters" id="filters">
+    <button class="chip hot"  data-temp="Hot">Hot</button>
+    <button class="chip warm" data-temp="Warm">Warm</button>
+    <button class="chip cold" data-temp="Cold">Cold</button>
+    <select id="f-source"><option value="">All sources</option></select>
+    <select id="f-market"><option value="">All micro-markets</option></select>
+    <select id="f-ptype"><option value="">All property types</option></select>
+    <input class="search" id="f-search" placeholder="Search name / phone / notes">
+    <button class="clear-f" id="f-clear" style="display:none">Clear filters</button>
+  </div>
+</div>
+
+<main>
+  <div id="v-board" class="board"></div>
+  <div id="v-followups" style="display:none"></div>
+  <div id="v-pipeline" class="pipe" style="display:none"></div>
+  <div id="v-table" style="display:none"></div>
+</main>
+
+<!-- ============ LEAD SIDE PANEL ============ -->
+<div class="ovl" id="ovl"></div>
+<aside class="panel" id="panel"></aside>
+
+<div id="toast"></div>
+<input type="file" id="import-file" accept=".json" style="display:none">
+
+<script>
+/* ==================================================================
+   SETTINGS — everything you might want to rename lives here.
+   ================================================================== */
+
+// Pipeline stages, left to right on the Board. Rename freely, but do it
+// BEFORE you add real leads (each lead stores its stage by name).
+const STAGES = ["New","Qualified","Engaging","Visited","Proposal Sent","Closed Won","Lost"];
+
+// The "money stages" that get the gold treatment on the Board:
+const MONEY_STAGES = ["Visited","Proposal Sent"];
+const WON_STAGE  = "Closed Won";
+const LOST_STAGE = "Lost";
+
+// A lead that hasn't changed stage in this many days shows the amber "stale" dot:
+const STALE_DAYS = 14;
+
+// New leads get a follow-up this many days out:
+const DEFAULT_FOLLOWUP_DAYS = 2;
+
+// Dropdown choices — rename / add / remove freely:
+const SOURCES    = ["Instagram DM","Instagram comment","WhatsApp","Website","Referral","Other"];
+const TEMPS      = ["Hot","Warm","Cold"];
+const TIERS      = ["—","Discovery Call","Research Package","Full Advisory","NRI Package"];
+const NEXT_ACTIONS = ["","Call","Send Buyer's Report","Share listing","Chase decision","Other"];
+const MARKETS    = ["","Noida","Greater Noida","Yamuna Expressway","Gurgaon","Other"];
+const PROP_TYPES = ["","Plot","Flat","Builder floor","Villa","Commercial"];
+const BHKS       = ["","1 BHK","2 BHK","3 BHK","4 BHK","5+ BHK"];
+const TIMELINES  = ["","Ready","3 months","6 months","Just exploring"];
+
+// The prefilled WhatsApp greeting. {name} becomes the lead's first name.
+const WHATSAPP_GREETING = "Hi {name}, Bhavik here from Real Estate with Bhavik. Just checking in — how are things looking on your property search?";
+
+/* ==================================================================
+   SUPABASE (optional) — cross-device sync + login.
+   Leave both blank and everything works fully offline on this device.
+
+   To sync between your laptop and iPad:
+   1. Create a free project at https://supabase.com
+   2. In the Supabase dashboard, open SQL Editor and run:
+
+        create table if not exists leads (
+          id text primary key,
+          user_id uuid not null default auth.uid(),
+          data jsonb not null,
+          updated_at timestamptz not null default now()
+        );
+        alter table leads enable row level security;
+        create policy "own leads" on leads
+          for all to authenticated
+          using (user_id = auth.uid())
+          with check (user_id = auth.uid());
+
+   3. In Authentication → Users, click "Add user" and create your own
+      email + password (this becomes your CRM login).
+   4. In Project Settings → API, copy the "Project URL" and the
+      "anon public" key into the two lines below. Save, push, done.
+   ================================================================== */
+const SUPABASE_URL      = "";   // e.g. "https://abcdefgh.supabase.co"
+const SUPABASE_ANON_KEY = "";   // the long "anon public" key
+
+/* ==================================================================
+   Everything below is the app itself.
+   ================================================================== */
+const STORE_KEY   = "rewb_crm_v1";
+const SESSION_KEY = "rewb_crm_session";
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+/* ---------- tiny helpers ---------- */
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function todayISO(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function addDays(iso,n){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n);
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function daysFromToday(iso){ if(!iso) return 0;
+  return Math.round((new Date(iso+"T12:00:00") - new Date(todayISO()+"T12:00:00")) / 864e5); }
+function fmtD(iso){ if(!iso) return "—"; return new Date(iso+"T12:00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short"}); }
+function fmtDT(ts){ return new Date(ts).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}); }
+function relPill(iso){ const n=daysFromToday(iso);
+  if(n<0)  return {cls:"overdue", txt:(-n)+"d overdue"};
+  if(n===0)return {cls:"today",   txt:"Today"};
+  if(n===1)return {cls:"",        txt:"Tomorrow"};
+  return {cls:"", txt:"in "+n+"d"}; }
+let toastT;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600); }
+
+/* ---------- state ---------- */
+let state = {
+  leads: [],
+  deleted: [],                       // ids removed locally, still to delete in cloud
+  filters: { temps:[], source:"", market:"", ptype:"", search:"" },
+  view: null,
+  sort: { key:"nextFollowUp", dir:1 },
+};
+let session = null;                  // Supabase auth session (when configured)
+let schedulingId = null;             // lead currently in "pick next follow-up" mode
+
+function load(){
+  try{ const raw=localStorage.getItem(STORE_KEY); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){}
+  try{ session = JSON.parse(localStorage.getItem(SESSION_KEY)||"null"); }catch(e){}
+}
+function persist(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+// save = persist locally right away, queue a cloud push, repaint.
+function save(){ persist(); scheduleSync(); render(); }
+
+function newLead(name){
+  const t = todayISO();
+  return { id:uid(), name:name, phone:"", source:"Instagram DM", temp:"Warm",
+    stage:STAGES[0], tier:"—", nextAction:"", nextActionNote:"",
+    firstContact:t, lastContact:t, nextFollowUp:addDays(t,DEFAULT_FOLLOWUP_DAYS),
+    touches:0, budget:"", market:"", ptype:"", bhk:"", timeline:"",
+    log:[{ts:Date.now(), text:"Lead created"}],
+    example:false, stageChangedAt:t, updatedAt:Date.now() };
+}
+function touchLead(l){ l.updatedAt = Date.now(); }
+function addLog(l, text){ l.log.unshift({ts:Date.now(), text:text}); }
+const isActive = l => l.stage!==WON_STAGE && l.stage!==LOST_STAGE;
+const isStale  = l => isActive(l) && daysFromToday(l.stageChangedAt) <= -STALE_DAYS;
+
+/* ---------- example data (safe to delete via menu) ---------- */
+function seed(){
+  const t = todayISO();
+  const mk = (o) => Object.assign(newLead(""), o, {example:true});
+  state.leads = [
+    mk({ name:"Rohit Sharma", phone:"98100 11223", source:"Instagram DM", temp:"Hot",
+      stage:"Visited", tier:"Full Advisory", nextAction:"Chase decision",
+      budget:"1.5–2 Cr", market:"Yamuna Expressway", ptype:"Plot", timeline:"3 months",
+      touches:6, firstContact:addDays(t,-32), lastContact:addDays(t,-6),
+      nextFollowUp:addDays(t,-2), stageChangedAt:addDays(t,-18),
+      log:[{ts:Date.now()-6*864e5,text:"Site visit done — liked sector 22D plots, wants corner facing"},
+           {ts:Date.now()-18*864e5,text:"Moved to Visited"},
+           {ts:Date.now()-32*864e5,text:"Lead created"}] }),
+    mk({ name:"Priya Malhotra", phone:"99110 44556", source:"Referral", temp:"Warm",
+      stage:"Proposal Sent", tier:"Research Package", nextAction:"Chase decision",
+      budget:"1–1.2 Cr", market:"Noida", ptype:"Flat", bhk:"3 BHK", timeline:"6 months",
+      touches:8, firstContact:addDays(t,-24), lastContact:addDays(t,-3),
+      nextFollowUp:t, stageChangedAt:addDays(t,-5),
+      log:[{ts:Date.now()-3*864e5,text:"Sent research package proposal on WhatsApp"},
+           {ts:Date.now()-5*864e5,text:"Moved to Proposal Sent"}] }),
+    mk({ name:"Aman Verma", phone:"97170 77889", source:"Website", temp:"Cold",
+      stage:"New", nextAction:"Call",
+      budget:"60–80 L", market:"Greater Noida", ptype:"Flat", bhk:"2 BHK", timeline:"Just exploring",
+      touches:1, firstContact:addDays(t,-1), lastContact:addDays(t,-1),
+      nextFollowUp:addDays(t,3),
+      log:[{ts:Date.now()-864e5,text:"Filled website form — early stage, browsing"}] }),
+    mk({ name:"Neha & Sandeep Gupta", phone:"98990 22334", source:"WhatsApp", temp:"Warm",
+      stage:"Engaging", tier:"Discovery Call", nextAction:"Send Buyer's Report",
+      budget:"2–2.5 Cr", market:"Gurgaon", ptype:"Builder floor", bhk:"3 BHK", timeline:"6 months",
+      touches:4, firstContact:addDays(t,-12), lastContact:addDays(t,-4),
+      nextFollowUp:addDays(t,5), stageChangedAt:addDays(t,-8),
+      log:[{ts:Date.now()-4*864e5,text:"Discovery call done — dual income, school proximity matters"}] }),
+    mk({ name:"Vikram Singh (NRI)", phone:"97030 55667", source:"Instagram comment", temp:"Hot",
+      stage:"Qualified", tier:"NRI Package", nextAction:"Send Buyer's Report",
+      budget:"1–1.5 Cr", market:"Yamuna Expressway", ptype:"Plot", timeline:"Ready",
+      touches:3, firstContact:addDays(t,-9), lastContact:addDays(t,-5),
+      nextFollowUp:addDays(t,-3), stageChangedAt:addDays(t,-7),
+      log:[{ts:Date.now()-5*864e5,text:"Based in Dubai — wants investment plot near Jewar airport"}] }),
+  ];
+}
+
+/* ---------- filters ---------- */
+function filtersActive(){ const f=state.filters;
+  return f.temps.length||f.source||f.market||f.ptype||f.search; }
+function matches(l){ const f=state.filters;
+  if(f.temps.length && !f.temps.includes(l.temp)) return false;
+  if(f.source && l.source!==f.source) return false;
+  if(f.market && l.market!==f.market) return false;
+  if(f.ptype  && l.ptype!==f.ptype)   return false;
+  if(f.search){
+    const q=f.search.toLowerCase();
+    const hay=[l.name,l.phone,l.budget,l.nextAction,l.nextActionNote,l.market,
+      ...l.log.map(x=>x.text)].join(" ").toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  return true;
+}
+const visible = () => state.leads.filter(matches);
+
+function renderFilterBar(){
+  $$("#filters .chip").forEach(c=>c.classList.toggle("on",state.filters.temps.includes(c.dataset.temp)));
+  $("#f-source").value=state.filters.source;
+  $("#f-market").value=state.filters.market;
+  $("#f-ptype").value=state.filters.ptype;
+  if($("#f-search")!==document.activeElement) $("#f-search").value=state.filters.search;
+  $("#f-clear").style.display=filtersActive()?"":"none";
+}
+
+/* ---------- view switching ---------- */
+function setView(v){ state.view=v; persist(); render(); }
+function render(){
+  renderFilterBar();
+  $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===state.view));
+  ["board","followups","pipeline","table"].forEach(v=>{
+    $("#v-"+v).style.display = v===state.view ? "" : "none";
+  });
+  // follow-ups badge = overdue + due today (unfiltered, so it never lies)
+  const due = state.leads.filter(l=>isActive(l)&&daysFromToday(l.nextFollowUp)<=0).length;
+  $("#fu-badge").style.display=due?"":"none"; $("#fu-badge").textContent=due;
+  ({board:renderBoard, followups:renderFU, pipeline:renderPipe, table:renderTable}[state.view])();
+}
+
+/* ---------- BOARD ---------- */
+function cardHTML(l){
+  const money=MONEY_STAGES.includes(l.stage);
+  const glow = money && (l.temp==="Hot"||l.temp==="Warm");
+  const p=relPill(l.nextFollowUp);
+  return `<div class="card ${glow?"glow":""}" draggable="true" data-id="${l.id}">
+    <div class="nm">${glow?'<span class="star">★</span>':""}${esc(l.name)}
+      ${l.example?'<span class="extag">example</span>':""}
+      ${isStale(l)?'<span class="stale" title="No stage change in '+STALE_DAYS+'+ days"></span>':""}</div>
+    <div class="meta"><span>${esc(l.source)}</span><span class="temp ${l.temp}">${l.temp}</span>
+      <span>${l.touches} touch${l.touches===1?"":"es"}</span>
+      ${isActive(l)?`<span class="pill ${p.cls}">${p.txt}</span>`:""}</div>
+    ${l.nextAction?`<div class="act">→ ${esc(l.nextAction)}${l.nextActionNote?": "+esc(l.nextActionNote):""}</div>`:""}
+  </div>`;
+}
+function renderBoard(){
+  const leads=visible();
+  $("#v-board").innerHTML = STAGES.map(st=>{
+    const in_=leads.filter(l=>l.stage===st);
+    return `<div class="col ${MONEY_STAGES.includes(st)?"money":""}">
+      <h3>${esc(st)} <span class="cnt">${in_.length}</span></h3>
+      <div class="col-body" data-stage="${esc(st)}">${in_.map(cardHTML).join("")}</div>
+    </div>`;
+  }).join("");
+  // open panel on click
+  $$("#v-board .card").forEach(c=>{
+    c.addEventListener("click",()=>openPanel(c.dataset.id));
+    c.addEventListener("dragstart",e=>{ e.dataTransfer.setData("text/plain",c.dataset.id); });
+  });
+  // drag targets
+  $$("#v-board .col-body").forEach(b=>{
+    b.addEventListener("dragover",e=>{ e.preventDefault(); b.classList.add("dragover"); });
+    b.addEventListener("dragleave",()=>b.classList.remove("dragover"));
+    b.addEventListener("drop",e=>{
+      e.preventDefault(); b.classList.remove("dragover");
+      moveStage(e.dataTransfer.getData("text/plain"), b.dataset.stage);
+    });
+  });
+}
+function moveStage(id, stage){
+  const l=state.leads.find(x=>x.id===id);
+  if(!l || l.stage===stage) return;
+  l.stage=stage; l.stageChangedAt=todayISO();
+  addLog(l,"Moved to "+stage); touchLead(l); save();
+}
+
+/* ---------- FOLLOW-UPS ---------- */
+function fuRow(l){
+  const scheduling = schedulingId===l.id;
+  const digits=(l.phone||"").replace(/\D/g,"");
+  const wa = digits ? "https://wa.me/"+(digits.length===10?"91"+digits:digits)
+    +"?text="+encodeURIComponent(WHATSAPP_GREETING.replace("{name}",l.name.split(" ")[0])) : "";
+  const lastNote=(l.log.find(x=>x.text)||{}).text||"";
+  return `<div class="fu-row" data-id="${l.id}">
+    <div class="fu-main" data-open="${l.id}">
+      <div class="nm">${esc(l.name)} <span class="temp ${l.temp}">${l.temp}</span></div>
+      <div class="sub">${esc(l.phone||"no phone")} · ${esc(l.stage)}${l.nextAction?" · → "+esc(l.nextAction):""}</div>
+      ${lastNote?`<div class="note">${esc(lastNote)}</div>`:""}
+    </div>
+    <div class="fu-actions">
+      ${scheduling
+        ? `<span class="sched"><span class="lbl">Logged ✓ next follow-up:</span>
+            <button class="btn sm" data-sched="2">+2d</button>
+            <button class="btn sm" data-sched="5">+5d</button>
+            <button class="btn sm" data-sched="7">+1wk</button>
+            <button class="btn sm" data-sched="14">+2wk</button>
+            <input type="date" data-scheddate style="padding:4px 8px;font-size:12.5px"></span>`
+        : `${wa?`<a class="btn wa" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+           <button class="btn gold" data-log="${l.id}">Log &amp; schedule</button>`}
+    </div>
+  </div>`;
+}
+function renderFU(){
+  const rows=visible().filter(l=>isActive(l));
+  const g={overdue:[],today:[],soon:[]};
+  rows.forEach(l=>{ const n=daysFromToday(l.nextFollowUp);
+    if(n<0)g.overdue.push(l); else if(n===0)g.today.push(l); else if(n<=7)g.soon.push(l); });
+  g.overdue.sort((a,b)=>a.nextFollowUp<b.nextFollowUp?-1:1);   // most overdue first
+  g.soon.sort((a,b)=>a.nextFollowUp<b.nextFollowUp?-1:1);
+  const sec=(cls,title,list,dateLabel)=> list.length
+    ? `<div class="fu-group ${cls}"><h2>${title} <small>${list.length}</small></h2>
+       ${list.map(l=>fuRow(l)).join("")}</div>` : "";
+  let html = sec("overdue","Overdue",g.overdue)
+           + sec("today","Due today",g.today)
+           + sec("soon","Next 7 days",g.soon);
+  if(!html) html=`<div class="allclear"><div class="big">You're all caught up.</div>
+    Nothing due in the next 7 days${filtersActive()?" (filters are on)":""}.</div>`;
+  $("#v-followups").innerHTML=html;
+
+  $$("#v-followups [data-open]").forEach(el=>el.addEventListener("click",()=>openPanel(el.dataset.open)));
+  $$("#v-followups [data-log]").forEach(b=>b.addEventListener("click",()=>logAndSchedule(b.dataset.log)));
+  $$("#v-followups [data-sched]").forEach(b=>b.addEventListener("click",e=>{
+    const id=e.target.closest(".fu-row").dataset.id;
+    setNextFU(id, addDays(todayISO(), +b.dataset.sched));
+  }));
+  $$("#v-followups [data-scheddate]").forEach(inp=>inp.addEventListener("change",e=>{
+    if(!inp.value) return;
+    setNextFU(inp.closest(".fu-row").dataset.id, inp.value);
+  }));
+}
+// Step 1: log the touch. Step 2 (the quick buttons) sets the new date.
+function logAndSchedule(id){
+  const l=state.leads.find(x=>x.id===id); if(!l) return;
+  l.lastContact=todayISO(); l.touches++;
+  addLog(l,"Contacted (logged from Follow-ups)"); touchLead(l);
+  schedulingId=id; save();
+}
+function setNextFU(id, dateISO){
+  const l=state.leads.find(x=>x.id===id); if(!l||!dateISO) return;
+  l.nextFollowUp=dateISO;
+  addLog(l,"Next follow-up set for "+fmtD(dateISO)); touchLead(l);
+  schedulingId=null; save();
+  toast(l.name+" — follow-up "+fmtD(dateISO));
+}
+
+/* ---------- PIPELINE ---------- */
+function renderPipe(){
+  const all=visible();
+  const won=all.filter(l=>l.stage===WON_STAGE).length;
+  const active=all.filter(isActive).length;
+  const conv=all.length?Math.round(won/all.length*100):0;
+  const counts=STAGES.map(st=>all.filter(l=>l.stage===st).length);
+  const max=Math.max(...counts,1);
+  const stale=all.filter(isStale);
+  const over=all.filter(l=>isActive(l)&&daysFromToday(l.nextFollowUp)<0);
+
+  const funnel=STAGES.map((st,i)=>`
+    <div class="frow ${MONEY_STAGES.includes(st)?"money":""}">
+      <div class="fl">${esc(st)}</div>
+      <div class="ftrack"><div class="fbar" style="width:${counts[i]/max*100}%"></div></div>
+      <div class="fn">${counts[i]}</div>
+    </div>`).join("");
+
+  const attnItems=[
+    ...over.map(l=>({l,why:(-daysFromToday(l.nextFollowUp))+"d overdue follow-up",od:true})),
+    ...stale.filter(l=>!over.includes(l)).map(l=>({l,why:"stale — no stage change in "+(-daysFromToday(l.stageChangedAt))+"d",od:false})),
+  ];
+  const attn=attnItems.length
+    ? `<ul>${attnItems.map(x=>`<li data-open="${x.l.id}"><span class="nm">${esc(x.l.name)}</span>
+        <span class="why ${x.od?"od":""}">${x.why}</span>
+        <span style="color:var(--sage);font-size:12.5px">${esc(x.l.stage)}</span></li>`).join("")}</ul>`
+    : `<div class="ok">Nothing needs attention. Well managed.</div>`;
+
+  const srcRows=SOURCES.map(s=>{
+    const n=all.filter(l=>l.source===s).length;
+    if(!n) return "";
+    const w=all.filter(l=>l.source===s&&l.stage===WON_STAGE).length;
+    const maxS=Math.max(...SOURCES.map(x=>all.filter(l=>l.source===x).length),1);
+    return `<div class="sl">${esc(s)}</div>
+      <div><div class="sbar" style="width:${n/maxS*100}%"></div></div>
+      <div class="sn">${n} lead${n===1?"":"s"}${w?` · <b>${w} won</b>`:""}</div>`;
+  }).join("");
+
+  $("#v-pipeline").innerHTML=`
+    <div class="statrow">
+      <div class="stat"><div class="n">${all.length}</div><div class="l">Total leads</div></div>
+      <div class="stat"><div class="n">${active}</div><div class="l">Active</div></div>
+      <div class="stat"><div class="n">${won}</div><div class="l">Closed won</div></div>
+      <div class="stat"><div class="n">${conv}%</div><div class="l">Conversion</div></div>
+    </div>
+    <h2>Funnel</h2>${funnel}
+    <h2>Needs attention</h2><div class="attn">${attn}</div>
+    <h2>Sources</h2><div class="srcgrid">${srcRows||'<div class="sl"></div><div style="color:var(--sage)">No leads yet</div><div></div>'}</div>`;
+  $$("#v-pipeline [data-open]").forEach(el=>el.addEventListener("click",()=>openPanel(el.dataset.open)));
+}
+
+/* ---------- TABLE ---------- */
+const COLS=[
+  {k:"name",  t:"Name",       g:l=>l.name.toLowerCase()},
+  {k:"temp",  t:"Temp",       g:l=>TEMPS.indexOf(l.temp)},
+  {k:"stage", t:"Stage",      g:l=>STAGES.indexOf(l.stage)},
+  {k:"source",t:"Source",     g:l=>l.source},
+  {k:"phone", t:"Phone",      g:l=>l.phone},
+  {k:"nextFollowUp",t:"Next follow-up",g:l=>l.nextFollowUp||"9999"},
+  {k:"nextAction",t:"Next action",g:l=>l.nextAction},
+  {k:"budget",t:"Budget",     g:l=>l.budget},
+  {k:"market",t:"Micro-market",g:l=>l.market},
+  {k:"ptype", t:"Type",       g:l=>l.ptype},
+  {k:"touches",t:"Touches",   g:l=>l.touches},
+  {k:"lastContact",t:"Last contact",g:l=>l.lastContact||""},
+];
+function renderTable(){
+  const {key,dir}=state.sort;
+  const col=COLS.find(c=>c.k===key)||COLS[5];
+  const rows=[...visible()].sort((a,b)=>{
+    const x=col.g(a),y=col.g(b); return (x<y?-1:x>y?1:0)*dir; });
+  $("#v-table").innerHTML=`<div class="tblwrap"><table>
+    <thead><tr>${COLS.map(c=>`<th data-k="${c.k}">${c.t}${c.k===key?(dir>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(l=>`<tr data-id="${l.id}">
+      <td>${esc(l.name)}${l.example?' <span class="extag">ex</span>':""}</td>
+      <td><span class="temp ${l.temp}">${l.temp}</span></td>
+      <td>${esc(l.stage)}</td><td>${esc(l.source)}</td><td>${esc(l.phone)}</td>
+      <td>${fmtD(l.nextFollowUp)}</td><td>${esc(l.nextAction)}</td>
+      <td>${esc(l.budget)}</td><td>${esc(l.market)}</td><td>${esc(l.ptype)}</td>
+      <td>${l.touches}</td><td>${fmtD(l.lastContact)}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+  $$("#v-table th").forEach(th=>th.addEventListener("click",()=>{
+    if(state.sort.key===th.dataset.k) state.sort.dir*=-1;
+    else state.sort={key:th.dataset.k,dir:1};
+    persist(); renderTable();
+  }));
+  $$("#v-table tbody tr").forEach(tr=>tr.addEventListener("click",()=>openPanel(tr.dataset.id)));
+}
+
+/* ---------- SIDE PANEL ---------- */
+function sel(l,field,opts,label){
+  return `<div class="fld"><label>${label}</label>
+    <select data-f="${field}">${opts.map(o=>
+      `<option value="${esc(o)}" ${l[field]===o?"selected":""}>${o===""?"—":esc(o)}</option>`).join("")}</select></div>`;
+}
+function inp(l,field,label,type="text",wide=false){
+  return `<div class="fld ${wide?"wide":""}"><label>${label}</label>
+    <input type="${type}" data-f="${field}" value="${esc(l[field])}"></div>`;
+}
+function openPanel(id){
+  const l=state.leads.find(x=>x.id===id); if(!l) return;
+  $("#panel").dataset.id=id;
+  $("#panel").innerHTML=`
+    <button class="close" id="p-close">×</button>
+    <h2>${esc(l.name)}</h2>
+    <h4>Basics</h4>
+    <div class="fgrid">
+      ${inp(l,"name","Name","text",true)}
+      ${inp(l,"phone","Phone / WhatsApp")}
+      ${sel(l,"source",SOURCES,"Source")}
+      ${sel(l,"temp",TEMPS,"Temperature")}
+      ${sel(l,"stage",STAGES,"Stage")}
+      ${sel(l,"tier",TIERS,"Interested tier")}
+      ${sel(l,"nextAction",NEXT_ACTIONS,"Next action")}
+      ${inp(l,"nextActionNote","Next-action note","text",true)}
+      ${inp(l,"firstContact","First contact","date")}
+      ${inp(l,"lastContact","Last contact","date")}
+      ${inp(l,"nextFollowUp","Next follow-up","date")}
+      ${inp(l,"touches","Touch count","number")}
+    </div>
+    <h4>Requirements</h4>
+    <div class="fgrid">
+      ${inp(l,"budget","Budget range")}
+      ${sel(l,"market",MARKETS,"Micro-market")}
+      ${sel(l,"ptype",PROP_TYPES,"Property type")}
+      ${sel(l,"bhk",BHKS,"BHK")}
+      ${sel(l,"timeline",TIMELINES,"Buying timeline")}
+    </div>
+    <h4>Activity log</h4>
+    <div class="logbox">
+      <textarea id="p-note" placeholder="What happened? (call notes, WhatsApp reply…)"></textarea>
+      <button class="btn gold" id="p-addnote">Add note</button>
+    </div>
+    <div id="p-log">${l.log.map(x=>`<div class="logline"><time>${fmtDT(x.ts)}</time>${esc(x.text)}</div>`).join("")}</div>
+    <div class="danger">
+      <button id="p-del">Delete lead</button>
+    </div>`;
+  $("#panel").classList.add("open"); $("#ovl").classList.add("open");
+  $("#p-close").addEventListener("click",closePanel);
+  $("#p-del").addEventListener("click",()=>{
+    if(!confirm("Delete "+l.name+"? This cannot be undone.")) return;
+    state.deleted.push(l.id);
+    state.leads=state.leads.filter(x=>x.id!==l.id);
+    closePanel(); save(); toast("Deleted "+l.name);
+  });
+  $("#p-addnote").addEventListener("click",()=>{
+    const v=$("#p-note").value.trim(); if(!v) return;
+    addLog(l,v); touchLead(l); persist(); scheduleSync();
+    $("#p-note").value="";
+    $("#p-log").innerHTML=l.log.map(x=>`<div class="logline"><time>${fmtDT(x.ts)}</time>${esc(x.text)}</div>`).join("");
+    render();
+  });
+  // every field saves the moment you change it
+  $("#panel").addEventListener("change",e=>{
+    const f=e.target.dataset.f; if(!f) return;
+    let v=e.target.value;
+    if(f==="stage" && v!==l.stage){ l.stageChangedAt=todayISO(); addLog(l,"Moved to "+v); }
+    if(f==="touches") v=Math.max(0,parseInt(v||"0",10));
+    if(f==="nextFollowUp" && !v){ v=addDays(todayISO(),DEFAULT_FOLLOWUP_DAYS); e.target.value=v;
+      toast("Follow-up can't be blank — set to "+fmtD(v)); }
+    l[f]=v; touchLead(l);
+    if(f==="name") $("#panel h2").textContent=l.name;
+    if(f==="stage") $("#p-log").innerHTML=l.log.map(x=>`<div class="logline"><time>${fmtDT(x.ts)}</time>${esc(x.text)}</div>`).join("");
+    persist(); scheduleSync(); render();
+  });
+}
+function closePanel(){ $("#panel").classList.remove("open"); $("#ovl").classList.remove("open"); }
+
+/* ---------- add lead ---------- */
+function addLead(){
+  const inp=$("#add-input"); const name=inp.value.trim(); if(!name) return;
+  const l=newLead(name);
+  state.leads.unshift(l); inp.value=""; save();
+  toast("Added "+name+" — follow-up "+fmtD(l.nextFollowUp));
+}
+
+/* ---------- export / import / examples ---------- */
+function doExport(){
+  const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),leads:state.leads},null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="bhavik-crm-backup-"+todayISO()+".json";
+  a.click(); URL.revokeObjectURL(a.href);
+  toast("Backup downloaded");
+}
+function doImport(file){
+  const r=new FileReader();
+  r.onload=()=>{ try{
+      const d=JSON.parse(r.result);
+      const leads=Array.isArray(d)?d:d.leads;
+      if(!Array.isArray(leads)) throw 0;
+      if(!confirm("Import "+leads.length+" leads? This replaces the current list.")) return;
+      state.leads=leads; save(); toast("Imported "+leads.length+" leads");
+    }catch(e){ alert("That file doesn't look like a CRM backup."); } };
+  r.readAsText(file);
+}
+
+/* ==================================================================
+   SUPABASE SYNC — runs only if the two keys above are filled in.
+   localStorage always saves first; the cloud push happens in the
+   background and failures never block you.
+   ================================================================== */
+const supaOn = () => SUPABASE_URL && SUPABASE_ANON_KEY;
+function setSync(cls,txt,title){ const d=$("#syncdot");
+  d.className="syncdot "+cls; $("#synctxt").textContent=txt; d.title=title||""; }
+
+async function supa(path,opts={},retry=true){
+  const headers={ apikey:SUPABASE_ANON_KEY,
+    Authorization:"Bearer "+(session?session.access_token:SUPABASE_ANON_KEY),
+    "Content-Type":"application/json", ...(opts.headers||{}) };
+  const res=await fetch(SUPABASE_URL+path,{...opts,headers});
+  if(res.status===401 && retry && session && session.refresh_token){
+    if(await refreshSession()) return supa(path,opts,false);
+  }
+  return res;
+}
+async function refreshSession(){
+  try{
+    const res=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=refresh_token",{
+      method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({refresh_token:session.refresh_token})});
+    if(!res.ok){ signOut(false); return false; }
+    session=await res.json();
+    localStorage.setItem(SESSION_KEY,JSON.stringify(session));
+    return true;
+  }catch(e){ return false; }
+}
+async function signIn(email,pass){
+  const res=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
+    method:"POST",headers:{apikey:SUPABASE_ANON_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify({email,password:pass})});
+  const d=await res.json();
+  if(!res.ok) throw new Error(d.error_description||d.msg||"Sign-in failed");
+  session=d; localStorage.setItem(SESSION_KEY,JSON.stringify(session));
+}
+function signOut(reload=true){
+  session=null; localStorage.removeItem(SESSION_KEY);
+  if(reload) location.reload();
+}
+
+let syncTimer=null;
+function scheduleSync(){ if(!supaOn()||!session) return;
+  clearTimeout(syncTimer); syncTimer=setTimeout(pushRemote,1500); }
+
+async function pushRemote(){
+  if(!supaOn()||!session) return;
+  try{
+    setSync("syncing","Syncing…");
+    if(state.leads.length){
+      const rows=state.leads.map(l=>({id:l.id,data:l,updated_at:new Date(l.updatedAt||Date.now()).toISOString()}));
+      const res=await supa("/rest/v1/leads?on_conflict=id",{method:"POST",
+        headers:{Prefer:"resolution=merge-duplicates"},body:JSON.stringify(rows)});
+      if(!res.ok) throw new Error("push "+res.status);
+    }
+    for(const id of [...state.deleted]){
+      const res=await supa("/rest/v1/leads?id=eq."+encodeURIComponent(id),{method:"DELETE"});
+      if(res.ok||res.status===404) state.deleted=state.deleted.filter(x=>x!==id);
+    }
+    persist();
+    setSync("synced","Synced","Last synced "+new Date().toLocaleTimeString());
+  }catch(e){
+    setSync("error","Offline","Couldn't reach the cloud — data is safe locally. Will retry on next change.");
+  }
+}
+async function pullRemote(){
+  if(!supaOn()||!session) return;
+  try{
+    setSync("syncing","Syncing…");
+    const res=await supa("/rest/v1/leads?select=id,data");
+    if(!res.ok) throw new Error("pull "+res.status);
+    const rows=await res.json();
+    let changed=false;
+    rows.forEach(r=>{
+      if(state.deleted.includes(r.id)) return;          // deleted here, not yet in cloud
+      const local=state.leads.find(l=>l.id===r.id);
+      if(!local){ state.leads.push(r.data); changed=true; }
+      else if((r.data.updatedAt||0)>(local.updatedAt||0)){
+        Object.assign(local,r.data); changed=true;      // newest edit wins
+      }
+    });
+    if(changed){ persist(); render(); }
+    setSync("synced","Synced");
+    pushRemote();                                       // push anything the cloud was missing
+  }catch(e){
+    setSync("error","Offline","Couldn't reach the cloud — working locally.");
+  }
+}
+
+/* ---------- login flow ---------- */
+function showLogin(){
+  $("#login").classList.add("open");
+  $("#li-btn").addEventListener("click",tryLogin);
+  $("#li-pass").addEventListener("keydown",e=>{ if(e.key==="Enter") tryLogin(); });
+  async function tryLogin(){
+    $("#li-err").textContent="";
+    $("#li-btn").textContent="Signing in…";
+    try{
+      await signIn($("#li-email").value.trim(),$("#li-pass").value);
+      $("#login").classList.remove("open");
+      startApp();
+    }catch(err){
+      $("#li-err").textContent=err.message;
+      $("#li-btn").textContent="Sign in";
+    }
+  }
+}
+
+/* ---------- wiring ---------- */
+function wire(){
+  $$("#tabs button").forEach(b=>b.addEventListener("click",()=>setView(b.dataset.v)));
+  $("#add-btn").addEventListener("click",addLead);
+  $("#add-input").addEventListener("keydown",e=>{ if(e.key==="Enter") addLead(); });
+  $("#ovl").addEventListener("click",closePanel);
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape") closePanel(); });
+
+  // filters
+  $$("#filters .chip").forEach(c=>c.addEventListener("click",()=>{
+    const t=c.dataset.temp, arr=state.filters.temps;
+    arr.includes(t)?arr.splice(arr.indexOf(t),1):arr.push(t);
+    persist(); render();
+  }));
+  const fill=(id,opts)=>{ const s=$(id);
+    opts.filter(o=>o).forEach(o=>{ const e=document.createElement("option"); e.value=o; e.textContent=o; s.appendChild(e); }); };
+  fill("#f-source",SOURCES); fill("#f-market",MARKETS); fill("#f-ptype",PROP_TYPES);
+  $("#f-source").addEventListener("change",e=>{ state.filters.source=e.target.value; persist(); render(); });
+  $("#f-market").addEventListener("change",e=>{ state.filters.market=e.target.value; persist(); render(); });
+  $("#f-ptype").addEventListener("change",e=>{ state.filters.ptype=e.target.value; persist(); render(); });
+  $("#f-search").addEventListener("input",e=>{ state.filters.search=e.target.value; persist(); render(); });
+  $("#f-clear").addEventListener("click",()=>{
+    state.filters={temps:[],source:"",market:"",ptype:"",search:""}; persist(); render(); });
+
+  // menu
+  $("#menu-btn").addEventListener("click",e=>{ e.stopPropagation(); $("#menu").classList.toggle("open"); });
+  document.addEventListener("click",()=>$("#menu").classList.remove("open"));
+  $("#m-export").addEventListener("click",doExport);
+  $("#m-import").addEventListener("click",()=>$("#import-file").click());
+  $("#import-file").addEventListener("change",e=>{ if(e.target.files[0]) doImport(e.target.files[0]); e.target.value=""; });
+  $("#m-clearex").addEventListener("click",()=>{
+    const n=state.leads.filter(l=>l.example).length;
+    if(!n) return toast("No example leads left");
+    if(!confirm("Remove "+n+" example leads?")) return;
+    state.leads.filter(l=>l.example).forEach(l=>state.deleted.push(l.id));
+    state.leads=state.leads.filter(l=>!l.example);
+    save(); toast("Examples cleared");
+  });
+  $("#m-signout").addEventListener("click",()=>signOut());
+
+  window.addEventListener("online",()=>{ if(supaOn()&&session) pushRemote(); });
+}
+
+function startApp(){
+  if(supaOn()){ $("#m-signout").style.display=""; pullRemote(); }
+  else setSync("","Local","Data lives in this browser only. Fill in the Supabase keys at the top of the file to sync across devices.");
+  render();
+}
+
+/* ---------- boot ---------- */
+load();
+if(!localStorage.getItem(STORE_KEY)){ seed(); persist(); }          // first run: examples
+if(!state.view) state.view = innerWidth<700 ? "followups" : "board"; // iPad/phone opens on the worklist
+wire();
+if(supaOn() && !session) showLogin();
+else startApp();
+</script>
+</body>
+</html>
