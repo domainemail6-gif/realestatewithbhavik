@@ -309,6 +309,12 @@
 
     .card .btn { margin-top: 1rem; width: 100%; }
     .cards-note { margin-top: 1.2rem; font-size: 0.82rem; line-height: 1.6; }
+    .cards-intro {
+      font-size: 0.85rem; line-height: 1.6; margin: 0 0 1.1rem;
+      padding: 0.7rem 0.9rem; border-left: 2px solid var(--accent);
+      background: var(--bg-panel); border-radius: 0 6px 6px 0;
+    }
+    .cards-intro strong { color: var(--ink); font-weight: 600; }
 
     /* ========================================================
        PROCESS
@@ -459,6 +465,7 @@
     .legal details { margin-bottom: 0.6rem; }
     .legal summary { cursor: pointer; font-size: 0.78rem; color: var(--muted); }
     .legal-body p { font-size: 0.76rem; margin: 0.45rem 0; line-height: 1.55; }
+    .legal-body p.legal-effective { font-style: italic; color: var(--muted-soft); margin-bottom: 0.7rem; }
     .foot-line { font-size: 0.74rem; color: var(--muted-soft); margin-top: 0.9rem; }
 
     /* ========================================================
@@ -476,7 +483,7 @@
   <header id="nav">
     <div class="wrap nav-inner">
       <a href="#" class="nav-name">Real Estate with Bhavik</a>
-      <a class="btn btn-sm" data-goatcounter-click="nav-book-call" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20book%20a%20discovery%20call." target="_blank" rel="noopener">Book a call · ₹499</a>
+      <a class="btn btn-sm" data-goatcounter-click="nav-book-call" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20book%20a%20discovery%20call." target="_blank" rel="noopener">Book a call · Free</a>
     </div>
   </header>
 
@@ -495,7 +502,7 @@
         </div>
 
         <div class="cred-row">
-          <span class="cred">RERA compliant</span>
+          <span class="cred">Works under a RERA-registered firm</span>
           <span class="cred">Three decades of NCR real estate behind me</span>
           <span class="cred">Ex-research analyst</span>
         </div>
@@ -504,7 +511,7 @@
         <p class="hero-sub">Research, shortlisting, site visits and negotiation for property buyers in NCR, with zero developer agenda.</p>
 
         <div class="hero-ctas">
-          <a class="btn btn-block" data-goatcounter-click="hero-book-call" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20book%20a%20discovery%20call." target="_blank" rel="noopener">Book a discovery call · ₹499</a>
+          <a class="btn btn-block" data-goatcounter-click="hero-book-call" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20book%20a%20discovery%20call." target="_blank" rel="noopener">Book a free discovery call</a>
           <a class="btn btn-ghost btn-block" data-goatcounter-click="hero-free-question" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%20have%20a%20question%20about%20buying%20in%20NCR." target="_blank" rel="noopener">Ask a free question</a>
         </div>
         <p class="assure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 2.6 6.4"/><path d="M3 22v-6h6"/></svg>Every fee you pay comes back to you: adjusted in full against brokerage when your deal closes. You never pay extra.</p>
@@ -514,7 +521,7 @@
         <div class="stats">
           <div><div class="stat-num">30+ yrs</div><div class="stat-label">NCR real estate background</div></div>
           <div><div class="stat-num">100%</div><div class="stat-label">Buyer-side. No inventory pushing</div></div>
-          <div><div class="stat-num">₹499</div><div class="stat-label">Early bird. Credited to any package</div></div>
+          <div><div class="stat-num">Free</div><div class="stat-label">Discovery call. No cost to start</div></div>
         </div>
 
       </div>
@@ -643,16 +650,17 @@
     <section id="packages">
       <div class="wrap reveal">
         <div class="eyebrow">How to work with me</div>
+        <p class="cards-intro">The pricing below is for <strong>residential</strong> buyers. <strong>Commercial and industrial</strong> engagements are priced separately, and <strong>each segment is quoted on its own</strong>, since the research and legal work differ. We'll confirm your exact scope and price on the free discovery call.</p>
         <div class="cards">
 
           <article class="card">
-            <div class="card-top"><span class="card-name">Discovery Call</span><span class="badge">Early bird</span></div>
-            <div class="card-price"><s>₹2,000</s>₹499</div>
-            <div class="card-desc">Start here. Always. Early bird price for a limited time.</div>
+            <div class="card-top"><span class="card-name">Discovery Call</span><span class="badge">Free for now</span></div>
+            <div class="card-price">Free</div>
+            <div class="card-desc">Start here. Always. No cost while I'm building out the practice.</div>
             <ul class="dash-list">
               <li>30-minute call about your requirement, budget and timeline</li>
               <li>I tell you honestly if I can help, and which package fits</li>
-              <li>Credited in full toward any package</li>
+              <li>No payment, no obligation either way</li>
             </ul>
             <a class="btn" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20book%20a%20discovery%20call." target="_blank" rel="noopener" data-goatcounter-click="package-discovery-book">Book on WhatsApp</a>
           </article>
@@ -701,7 +709,7 @@
           <article class="card span-2">
             <div class="card-top"><span class="card-name">Custom Engagement</span><span class="badge">Anywhere in India</span></div>
             <div class="card-price">Scope-based</div>
-            <div class="card-desc">Need a market surveyed beyond NCR? Tier 2, Tier 3, any city in India.</div>
+            <div class="card-desc">Commercial, industrial, or a market beyond NCR? Tier 2, Tier 3, any city in India. Each segment quoted on its own.</div>
             <ul class="dash-list">
               <li>I travel to the city and break the market down to its core</li>
               <li>Same research depth, same honest verdicts</li>
@@ -711,7 +719,7 @@
           </article>
 
         </div>
-        <p class="cards-note">Every fee here, from the discovery call to the full package, adjusts against brokerage at deal closure. If the deal doesn't close, the fee covers the work done. Either way, you're not paying a broker who was never working for you.</p>
+        <p class="cards-note">The discovery call costs nothing to start. Every paid package adjusts against brokerage at deal closure; if the deal doesn't close, the fee covers the work done. Either way, you're not paying a broker who was never working for you.</p>
       </div>
     </section>
 
@@ -726,7 +734,7 @@
           <div class="step">
             <div class="step-rail"><div class="step-num">1</div><div class="connector"></div></div>
             <div class="step-body">
-              <div class="step-title">Discovery call · ₹499 early bird</div>
+              <div class="step-title">Free discovery call</div>
               <p>30 minutes on your requirement, budget and timeline. I tell you exactly how I can help.</p>
             </div>
           </div>
@@ -766,7 +774,7 @@
       <div class="wrap reveal">
         <div class="eyebrow">Why me</div>
         <ul class="dash-list why-list">
-          <li><strong class="ink">RERA-registered firm:</strong> every engagement compliant and documented</li>
+          <li><strong class="ink">Works under a RERA-registered firm:</strong> every engagement compliant and documented, every project RERA-checked before it reaches you</li>
           <li><strong class="ink">Research analyst, India Infrastructure:</strong> market data and fundamentals, not brochures</li>
           <li><strong class="ink">Founder's office, Zeno Realty:</strong> the industry, seen from the inside</li>
           <li><strong class="ink">A background of 30+ years in NCR real estate</strong> and building materials, so I know what things cost to build</li>
@@ -888,8 +896,8 @@
           </details>
 
           <details>
-            <summary>Is the discovery call fee refundable?</summary>
-            <p>No, but it's credited in full toward any package. Think of it as the first instalment, not a separate cost.</p>
+            <summary>Is the discovery call really free?</summary>
+            <p>Yes, no charge, while I'm building out the practice. If it ever becomes unmanageable to keep it free, I'll introduce a fee for new bookings, but that won't affect a conversation already in progress.</p>
           </details>
 
           <details>
@@ -920,7 +928,7 @@
     <section id="final">
       <div class="wrap reveal">
         <h2 class="final-title">Ready to buy without the noise?</h2>
-        <p class="final-sub">Start with a 30-minute discovery call. ₹499 early bird, credited to any package. You'll know within 10 minutes if this is right for you.</p>
+        <p class="final-sub">Start with a free 30-minute discovery call. No cost, no obligation. You'll know within 10 minutes if this is right for you.</p>
         <div class="chat" aria-hidden="true">
           <div class="bubble you">Hi Bhavik, looking for a 3BHK in Noida around ₹2 Cr. Can you help?</div>
           <div class="bubble me">Most likely, yes. Tell me your timeline and I'll take it from there.</div>
@@ -944,15 +952,18 @@
   <footer>
     <div class="wrap">
 
-      <!-- DRAFT LEGAL TEXT: have a lawyer review before going live -->
+      <!-- LEGAL TEXT: acceptance/DPDP language reviewed informally with a lawyer friend. -->
       <div class="legal">
         <details>
           <summary>Terms of Service</summary>
           <div class="legal-body">
-            <p>1. Real Estate with Bhavik ("the Service") provides buyer-side property research and advisory across the Delhi NCR region. It does not provide legal, tax, or investment advice.</p>
-            <p>2. All fees are payable in advance and are non-refundable. Fees pay for research and advisory work performed, not for a guaranteed outcome.</p>
-            <p>3. The discovery call fee is credited in full toward any package purchased afterwards. The Research Package fee is credited toward the Full Advisory package if you upgrade.</p>
-            <p>4. All fees paid, including the discovery call and Research Package fees, are adjusted against brokerage payable at deal closure where I act as your agent in the transaction. If no deal closes, no adjustment arises and no refund is due.</p>
+            <p class="legal-effective">Effective from 5 July 2026.</p>
+            <p>By visiting this website, or by contacting, booking, or engaging any service described on it, you agree to be bound by these Terms of Service and the Privacy Policy below, under Section 8 of the Indian Contract Act, 1872 and Section 10A of the Information Technology Act, 2000. If you do not agree, please do not use this website or these services.</p>
+            <p>1. Real Estate with Bhavik ("the Service") is operated by Bhavik Aggarwal, proprietor of Marblify, and provides buyer-side property research and advisory across the Delhi NCR region. It does not provide legal, tax, or investment advice.</p>
+            <p>2. The discovery call is currently offered free of charge. All other fees are payable in advance and are non-refundable. Fees pay for research and advisory work performed, not for a guaranteed outcome.</p>
+            <p>2a. The package prices shown on this website apply to residential engagements. Commercial and industrial engagements are priced separately, and each property segment is quoted on its own. The applicable fee is confirmed before work begins.</p>
+            <p>3. The Research Package fee is credited toward the Full Advisory package if you upgrade.</p>
+            <p>4. All fees paid, including the Research Package fee, are adjusted against brokerage payable at deal closure where I act as your agent in the transaction. If no deal closes, no adjustment arises and no refund is due.</p>
             <p>5. Standard brokerage of 1% of the deal value, plus applicable taxes, is payable at deal closure where I act as your agent in the transaction.</p>
             <p>6. All recommendations are professional opinions based on research available at the time. The final purchase decision, and any independent verification you consider necessary, remains your responsibility.</p>
             <p>7. No guarantee is made regarding property availability, prices, delivery timelines, or future value.</p>
@@ -963,19 +974,22 @@
         <details>
           <summary>Privacy Policy</summary>
           <div class="legal-body">
-            <p>1. What I collect: your name, contact number, and the property requirements you share with me on WhatsApp or on calls. This page itself has no forms and sets no cookies.</p>
+            <p class="legal-effective">Effective from 5 July 2026.</p>
+            <p>1. What I collect: your name, contact number, and the property requirements you share with me on WhatsApp, Gmail, or on calls. This page itself has no forms and sets no cookies.</p>
             <p>2. How it is used: only to provide the advisory service you have asked about, and for basic records of our engagement.</p>
             <p>3. Sharing: your information is never sold, and never passed to developers, brokers, or marketers. It is shared only with parties essential to your own transaction, and only with your knowledge.</p>
             <p>4. Retention: kept for as long as needed for the engagement and reasonable record-keeping, then deleted.</p>
-            <p>5. Your rights: you can ask at any time, on WhatsApp, for your information to be corrected or deleted.</p>
-            <p>6. Fonts on this page load from Google Fonts, and visits are counted with GoatCounter, a privacy-friendly analytics service that sets no cookies and builds no personal profiles. Both may receive your IP address when the page loads. Nothing else is loaded from third parties.</p>
-            <p>7. This policy is written with India's Digital Personal Data Protection Act, 2023 in mind.</p>
+            <p>5. Third-party platforms: I communicate through WhatsApp, Gmail, and Instagram. Any information those platforms collect automatically or voluntarily through your use of them is governed by their own privacy policies, not this one, and I am not responsible for how they handle it.</p>
+            <p>6. Your rights: you can ask at any time, on WhatsApp, for your information to be corrected or deleted.</p>
+            <p>7. Grievance officer: for any complaint or request relating to your personal data under India's Digital Personal Data Protection Act, 2023, write to Bhavik Aggarwal at <strong>realestatewithbhavik@gmail.com</strong>. I will respond within a reasonable time.</p>
+            <p>8. Fonts on this page load from Google Fonts, and visits are counted with GoatCounter, a privacy-friendly analytics service that sets no cookies and builds no personal profiles. Both may receive your IP address when the page loads.</p>
+            <p>9. This policy is written with India's Digital Personal Data Protection Act, 2023 in mind.</p>
           </div>
         </details>
       </div>
 
       <p class="foot-line">© Real Estate with Bhavik · Pan-NCR Buyer Advisory · @realestatewithbhavik</p>
-      <p class="foot-line">RERA compliant · Information on this page is general in nature and is not legal, tax, or investment advice.</p>
+      <p class="foot-line">Operating under a RERA-registered firm · every project checked for compliance · Information on this page is general in nature and is not legal, tax, or investment advice.</p>
     </div>
   </footer>
 
