@@ -203,19 +203,28 @@
     /* ========================================================
        FORK — buying or selling chooser
     ======================================================== */
-    section[id] { scroll-margin-top: 4.5rem; }
+    section[id], #track-buy, #track-sell { scroll-margin-top: 4.5rem; }
     .fork { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
     @media (min-width: 620px) { .fork { grid-template-columns: 1fr 1fr; } }
     .fork-card {
-      display: block;
+      display: block; width: 100%; text-align: left; cursor: pointer;
+      font: inherit; color: inherit; -webkit-appearance: none; appearance: none;
       background: var(--surface); border: 1px solid var(--line);
       border-radius: 12px; padding: 1.25rem 1.15rem;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     }
     .fork-card:hover { border-color: var(--accent); background: #fff; }
+    .fork-card[aria-pressed="true"] {
+      border-color: var(--accent); background: #fff;
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
     .fork-name { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); line-height: 1.25; margin-bottom: 0.4rem; }
     .fork-desc { font-size: 0.85rem; line-height: 1.55; margin-bottom: 0.9rem; }
     .fork-go { font-size: 0.8rem; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
+    .fork-card .go-on { display: none; }
+    .fork-card[aria-pressed="true"] .go-idle { display: none; }
+    .fork-card[aria-pressed="true"] .go-on { display: inline; }
+    [hidden] { display: none !important; }
 
     /* ========================================================
        TWO JOURNEYS (comparison)
@@ -523,7 +532,6 @@
 
   <main>
 
-    <!-- ===================== HERO ===================== -->
     <section id="hero">
       <div class="wrap">
 
@@ -563,31 +571,32 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== FORK ===================== -->
     <section id="fork" style="padding-top:0;">
       <div class="wrap reveal">
         <div class="eyebrow">Which side are you on?</div>
         <div class="fork">
 
-          <a class="fork-card" href="#journey" data-goatcounter-click="fork-buying">
+          <button type="button" class="fork-card" data-track="buy" aria-pressed="true" data-goatcounter-click="fork-buying">
             <div class="fork-name">If you're buying</div>
             <div class="fork-desc">I research the market, shortlist what's worth your money, and negotiate for you. No developer pays me to steer you anywhere.</div>
-            <div class="fork-go">See how buying works →</div>
-          </a>
+            <div class="fork-go"><span class="go-idle">Show me buying →</span><span class="go-on">Showing buying below ↓</span></div>
+          </button>
 
-          <a class="fork-card" href="#sell" data-goatcounter-click="fork-selling">
+          <button type="button" class="fork-card" data-track="sell" aria-pressed="false" data-goatcounter-click="fork-selling">
             <div class="fork-name">If you're selling</div>
             <div class="fork-desc">One exclusive mandate and the whole sale leaves your desk. Every call, every site visit, every negotiation handled by my team.</div>
-            <div class="fork-go">See how selling works →</div>
-          </a>
+            <div class="fork-go"><span class="go-idle">Show me selling →</span><span class="go-on">Showing selling below ↓</span></div>
+          </button>
 
         </div>
       </div>
     </section>
 
+    <!-- ============ TRACK: BUYING ============ -->
+    <div id="track-buy">
+
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== TWO JOURNEYS ===================== -->
     <section id="journey">
       <div class="wrap reveal">
         <div class="eyebrow">Two ways to buy</div>
@@ -629,7 +638,6 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== WHAT I DO ===================== -->
     <section id="solution">
       <div class="wrap reveal">
         <div class="eyebrow">What I do for you</div>
@@ -678,7 +686,6 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== SAMPLE REPORT ===================== -->
     <section id="sample" style="padding-bottom:0;">
       <div class="wrap reveal">
         <div class="panel panel-flex">
@@ -706,7 +713,6 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== STANCE ===================== -->
     <section id="stance">
       <div class="wrap reveal">
         <div class="eyebrow">Why the fee is what it is</div>
@@ -719,8 +725,6 @@
         <p class="stance-note">If the fee is the part that gives you pause, say so on the discovery call. I'll tell you honestly whether you're better served by a conventional broker. <strong>I'd rather turn down the work than take on a purchase I can't give this much of myself to.</strong></p>
       </div>
     </section>
-
-    <!-- ===================== PACKAGES ===================== -->
     <section id="packages">
       <div class="wrap reveal">
         <div class="eyebrow">How to work with me</div>
@@ -815,7 +819,6 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== BROKERAGE ===================== -->
     <section id="brokerage">
       <div class="wrap reveal">
         <div class="eyebrow">Brokerage &amp; ticket size</div>
@@ -832,7 +835,6 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== PROCESS ===================== -->
     <section id="process">
       <div class="wrap reveal">
         <div class="eyebrow">The process</div>
@@ -876,7 +878,160 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== WHY ME ===================== -->
+    <section id="faq">
+      <div class="wrap reveal">
+        <div class="eyebrow">Buying — common questions</div>
+        <div class="faq">
+
+          <details>
+            <summary>Why should I pay you when brokers are free?</summary>
+            <p>Brokers are free because the developer pays them, which means their advice serves whoever pays. My fee comes from you, so my only incentive is that you buy right. And every fee adjusts against brokerage at closure, so in total you don't pay more anyway.</p>
+          </details>
+
+          <details>
+            <summary>Is the discovery call really free?</summary>
+            <p>Yes, no charge, while I'm building out the practice. If it ever becomes unmanageable to keep it free, I'll introduce a fee for new bookings, but that won't affect a conversation already in progress.</p>
+          </details>
+
+          <details>
+            <summary>Do you charge brokerage on top of the package?</summary>
+            <p>Standard 1% brokerage applies at closure, same as anywhere else. But your advisory fee adjusts against it, so you never pay more than you would with a regular broker.</p>
+          </details>
+
+          <details>
+            <summary>What if I don't end up buying?</summary>
+            <p>The fee pays for the work delivered: research, shortlisting, site visits, negotiation time. It isn't refundable, but there's also no brokerage to pay.</p>
+          </details>
+
+          <details>
+            <summary>How do payments work?</summary>
+            <p>Directly and simply: we confirm on WhatsApp, you pay by UPI or bank transfer, you get a receipt. No gateways, no stored cards.</p>
+          </details>
+
+          <details>
+            <summary>Which areas do you cover?</summary>
+            <p>Noida, Greater Noida, Yamuna Expressway and Gurgaon as standard; the rest of NCR on request. Tier 2–3 cities via custom engagement.</p>
+          </details>
+
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <!-- ============ TRACK: SELLING ============ -->
+    <div id="track-sell" hidden>
+
+    <div class="wrap"><div class="rule"></div></div>
+
+    <section id="sell">
+      <div class="wrap reveal">
+        <div class="eyebrow">If you're selling</div>
+        <p class="stance-lead">You take one meeting. I'll take the other forty.</p>
+        <div class="stance-body">
+          <p>Selling isn't hard because of the property. It's hard because of everything around it: the calls at all hours, the fifteen viewings where twelve were never serious, the offer from someone who was only ever curious. Most owners I speak to don't want a broker. They want the whole thing off their desk.</p>
+          <p>Sign a mandate with me and it comes off. My team takes every enquiry the property generates, works out who is real, runs every site visit, and negotiates only with buyers who can actually close. <strong>You meet the one buyer worth meeting, and you sit in the final meetings.</strong> That is the whole of your involvement.</p>
+        </div>
+
+        <div class="svc-grid" style="margin-top:1.5rem;">
+
+          <div class="svc">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></div>
+            <div class="svc-title">Every call, handled</div>
+            <div class="svc-desc">Every enquiry the property generates comes to us, not to your phone.</div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg></div>
+            <div class="svc-title">Buyers screened</div>
+            <div class="svc-desc">Budget, funding and intent checked. Only serious buyers ever reach you.</div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></div>
+            <div class="svc-title">All site visits run</div>
+            <div class="svc-desc">We show the property ourselves, as many times as it takes. You don't attend.</div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></div>
+            <div class="svc-title">Negotiation on your side</div>
+            <div class="svc-desc">We hold the line on price with buyers who have proven they can close.</div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 4 3 5-7"/></svg></div>
+            <div class="svc-title">Priced to the market</div>
+            <div class="svc-desc">A realistic number based on current rates and what your property actually is.</div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div>
+            <div class="svc-title">Marketing, if you want it</div>
+            <div class="svc-desc">In-house division: Google and Meta ads, the property platforms, creative and enquiries handled A to Z. Additional charge, quoted on the call.</div>
+          </div>
+
+        </div>
+
+        <div class="stance-body" style="margin-top:1.6rem;">
+          <p><strong>2% at closure, on an exclusive mandate.</strong> That is above the going rate in NCR, and it is meant to be. You are not paying for a listing. You are paying for all of it to leave your desk, and that only works if the mandate is mine to run.</p>
+          <p>If you want the property pushed harder than that, it's handled in house. My marketing division runs Google and Meta campaigns, builds the listing out across the property platforms, and takes the creative and the enquiries A to Z. You send me the property details and nothing else. How hard we push depends on the engagement you want, and it's an additional charge, quoted on the call.</p>
+        </div>
+
+        <p class="stance-note">It starts the same way as the buy side: a call about the property, and an honest answer. <strong>I don't take on a mandate I don't believe I can sell.</strong></p>
+
+        <a class="btn btn-block" style="margin-top:1.3rem;" data-goatcounter-click="sell-whatsapp" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20talk%20about%20selling%20my%20property." target="_blank" rel="noopener">Talk to me about selling</a>
+      </div>
+    </section>
+
+    <div class="wrap"><div class="rule"></div></div>
+
+    <section id="faq-sell">
+      <div class="wrap reveal">
+        <div class="eyebrow">Selling — common questions</div>
+        <div class="faq">
+
+          <details>
+            <summary>Why 2%, when most brokers here charge 1%?</summary>
+            <p>Because a 1% broker is doing a different job. They put your number in front of whoever calls, forward you the enquiries, and leave you to run the viewings. I take the mandate and the work with it: every call, every visit, the screening, the negotiation and the price strategy. One percent buys you a listing. Two percent buys your time back, and a sale run properly by people who do this full time. If all you want is your property on a portal, a 1% broker is honestly better value. The extra point is for not having to live inside the process.</p>
+          </details>
+
+          <details>
+            <summary>Why does the mandate have to be exclusive?</summary>
+            <p>Because the effort is spent before any commission exists. My team's time on every viewing and every call goes in up front, and if three other brokers are working the same property, one of them closes on work I paid for. Exclusivity is what makes it rational to put real weight behind your sale. It also protects your price: a property being shopped by five brokers looks desperate, and buyers read that and offer accordingly.</p>
+          </details>
+
+          <details>
+            <summary>How long does the mandate run?</summary>
+            <p>We agree the period before you sign, based on the property and the price you're after. If it lapses without a sale, you're free to walk away. I'd rather set a realistic window than tie you into a long one.</p>
+          </details>
+
+          <details>
+            <summary>Do I have to attend the site visits?</summary>
+            <p>No. That's the entire point. We show the property ourselves, as many times as it takes, and you don't hear about the ones that were never serious. You come in at the end, for the buyer who is real and the final meetings.</p>
+          </details>
+
+          <details>
+            <summary>What if the property doesn't sell?</summary>
+            <p>You owe me nothing. There's no upfront fee on the sell side, and commission is only payable when a deal closes. The single exception is marketing, if you chose to add it, since that money is spent on your property as it's incurred.</p>
+          </details>
+
+          <details>
+            <summary>Is the marketing compulsory?</summary>
+            <p>No. The mandate already covers everything up to and including negotiation. Marketing is an optional add-on for when you want the property pushed harder than that, and it's quoted separately on the call.</p>
+          </details>
+
+          <details>
+            <summary>How do you decide the asking price?</summary>
+            <p>From current transacted rates in your micromarket, what your property actually is against the comparable stock, and how quickly you want it gone. You'll get an honest number rather than a flattering one. Overpricing a property costs you far more time than starting at the right figure.</p>
+          </details>
+
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <div class="wrap"><div class="rule"></div></div>
+
     <section id="why">
       <div class="wrap reveal">
         <div class="eyebrow">Why me</div>
@@ -893,9 +1048,6 @@
 
     <div class="wrap"><div class="rule"></div></div>
 
-    <!-- ===================== TESTIMONIALS ===================== -->
-    <!-- NOTE: Replace the placeholder cards below with real client quotes.
-         Keep each quote to 2 lines max. Aim for 5–8 total. -->
     <section id="testimonials">
       <div class="wrap reveal">
         <div class="eyebrow">What clients say</div>
@@ -976,159 +1128,6 @@
       </div>
     </section>
 
-    <div class="wrap"><div class="rule"></div></div>
-
-    <!-- ===================== SELL BOX ===================== -->
-    <section id="sell">
-      <div class="wrap reveal">
-        <div class="eyebrow">If you're selling</div>
-        <p class="stance-lead">You take one meeting. I'll take the other forty.</p>
-        <div class="stance-body">
-          <p>Selling isn't hard because of the property. It's hard because of everything around it: the calls at all hours, the fifteen viewings where twelve were never serious, the offer from someone who was only ever curious. Most owners I speak to don't want a broker. They want the whole thing off their desk.</p>
-          <p>Sign a mandate with me and it comes off. My team takes every enquiry the property generates, works out who is real, runs every site visit, and negotiates only with buyers who can actually close. <strong>You meet the one buyer worth meeting, and you sit in the final meetings.</strong> That is the whole of your involvement.</p>
-        </div>
-
-        <div class="svc-grid" style="margin-top:1.5rem;">
-
-          <div class="svc">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></div>
-            <div class="svc-title">Every call, handled</div>
-            <div class="svc-desc">Every enquiry the property generates comes to us, not to your phone.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg></div>
-            <div class="svc-title">Buyers screened</div>
-            <div class="svc-desc">Budget, funding and intent checked. Only serious buyers ever reach you.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></div>
-            <div class="svc-title">All site visits run</div>
-            <div class="svc-desc">We show the property ourselves, as many times as it takes. You don't attend.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></div>
-            <div class="svc-title">Negotiation on your side</div>
-            <div class="svc-desc">We hold the line on price with buyers who have proven they can close.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 4 3 5-7"/></svg></div>
-            <div class="svc-title">Priced to the market</div>
-            <div class="svc-desc">A realistic number based on current rates and what your property actually is.</div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div>
-            <div class="svc-title">Marketing, if you want it</div>
-            <div class="svc-desc">In-house division: Google and Meta ads, the property platforms, creative and enquiries handled A to Z. Additional charge, quoted on the call.</div>
-          </div>
-
-        </div>
-
-        <div class="stance-body" style="margin-top:1.6rem;">
-          <p><strong>2% at closure, on an exclusive mandate.</strong> That is above the going rate in NCR, and it is meant to be. You are not paying for a listing. You are paying for all of it to leave your desk, and that only works if the mandate is mine to run.</p>
-          <p>If you want the property pushed harder than that, it's handled in house. My marketing division runs Google and Meta campaigns, builds the listing out across the property platforms, and takes the creative and the enquiries A to Z. You send me the property details and nothing else. How hard we push depends on the engagement you want, and it's an additional charge, quoted on the call.</p>
-        </div>
-
-        <p class="stance-note">It starts the same way as the buy side: a call about the property, and an honest answer. <strong>I don't take on a mandate I don't believe I can sell.</strong></p>
-
-        <a class="btn btn-block" style="margin-top:1.3rem;" data-goatcounter-click="sell-whatsapp" href="https://wa.me/917011733205?text=Hi%20Bhavik%2C%20I%27d%20like%20to%20talk%20about%20selling%20my%20property." target="_blank" rel="noopener">Talk to me about selling</a>
-      </div>
-    </section>
-
-    <div class="wrap"><div class="rule"></div></div>
-
-    <!-- ===================== FAQ (SELLING) ===================== -->
-    <section id="faq-sell">
-      <div class="wrap reveal">
-        <div class="eyebrow">Selling — common questions</div>
-        <div class="faq">
-
-          <details>
-            <summary>Why 2%, when most brokers here charge 1%?</summary>
-            <p>Because a 1% broker is doing a different job. They put your number in front of whoever calls, forward you the enquiries, and leave you to run the viewings. I take the mandate and the work with it: every call, every visit, the screening, the negotiation and the price strategy. One percent buys you a listing. Two percent buys your time back, and a sale run properly by people who do this full time. If all you want is your property on a portal, a 1% broker is honestly better value. The extra point is for not having to live inside the process.</p>
-          </details>
-
-          <details>
-            <summary>Why does the mandate have to be exclusive?</summary>
-            <p>Because the effort is spent before any commission exists. My team's time on every viewing and every call goes in up front, and if three other brokers are working the same property, one of them closes on work I paid for. Exclusivity is what makes it rational to put real weight behind your sale. It also protects your price: a property being shopped by five brokers looks desperate, and buyers read that and offer accordingly.</p>
-          </details>
-
-          <details>
-            <summary>How long does the mandate run?</summary>
-            <p>We agree the period before you sign, based on the property and the price you're after. If it lapses without a sale, you're free to walk away. I'd rather set a realistic window than tie you into a long one.</p>
-          </details>
-
-          <details>
-            <summary>Do I have to attend the site visits?</summary>
-            <p>No. That's the entire point. We show the property ourselves, as many times as it takes, and you don't hear about the ones that were never serious. You come in at the end, for the buyer who is real and the final meetings.</p>
-          </details>
-
-          <details>
-            <summary>What if the property doesn't sell?</summary>
-            <p>You owe me nothing. There's no upfront fee on the sell side, and commission is only payable when a deal closes. The single exception is marketing, if you chose to add it, since that money is spent on your property as it's incurred.</p>
-          </details>
-
-          <details>
-            <summary>Is the marketing compulsory?</summary>
-            <p>No. The mandate already covers everything up to and including negotiation. Marketing is an optional add-on for when you want the property pushed harder than that, and it's quoted separately on the call.</p>
-          </details>
-
-          <details>
-            <summary>How do you decide the asking price?</summary>
-            <p>From current transacted rates in your micromarket, what your property actually is against the comparable stock, and how quickly you want it gone. You'll get an honest number rather than a flattering one. Overpricing a property costs you far more time than starting at the right figure.</p>
-          </details>
-
-        </div>
-      </div>
-    </section>
-
-    <div class="wrap"><div class="rule"></div></div>
-
-    <!-- ===================== FAQ ===================== -->
-    <section id="faq">
-      <div class="wrap reveal">
-        <div class="eyebrow">Buying — common questions</div>
-        <div class="faq">
-
-          <details>
-            <summary>Why should I pay you when brokers are free?</summary>
-            <p>Brokers are free because the developer pays them, which means their advice serves whoever pays. My fee comes from you, so my only incentive is that you buy right. And every fee adjusts against brokerage at closure, so in total you don't pay more anyway.</p>
-          </details>
-
-          <details>
-            <summary>Is the discovery call really free?</summary>
-            <p>Yes, no charge, while I'm building out the practice. If it ever becomes unmanageable to keep it free, I'll introduce a fee for new bookings, but that won't affect a conversation already in progress.</p>
-          </details>
-
-          <details>
-            <summary>Do you charge brokerage on top of the package?</summary>
-            <p>Standard 1% brokerage applies at closure, same as anywhere else. But your advisory fee adjusts against it, so you never pay more than you would with a regular broker.</p>
-          </details>
-
-          <details>
-            <summary>What if I don't end up buying?</summary>
-            <p>The fee pays for the work delivered: research, shortlisting, site visits, negotiation time. It isn't refundable, but there's also no brokerage to pay.</p>
-          </details>
-
-          <details>
-            <summary>How do payments work?</summary>
-            <p>Directly and simply: we confirm on WhatsApp, you pay by UPI or bank transfer, you get a receipt. No gateways, no stored cards.</p>
-          </details>
-
-          <details>
-            <summary>Which areas do you cover?</summary>
-            <p>Noida, Greater Noida, Yamuna Expressway and Gurgaon as standard; the rest of NCR on request. Tier 2–3 cities via custom engagement.</p>
-          </details>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== FINAL CTA ===================== -->
     <section id="final">
       <div class="wrap reveal">
         <h2 class="final-title">Ready to do this without the noise?</h2>
@@ -1143,7 +1142,6 @@
         </div>
       </div>
     </section>
-
   </main>
 
   <!-- ===================== FLOATING WHATSAPP ===================== -->
@@ -1226,6 +1224,50 @@
         });
       }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
       els.forEach(function (el) { io.observe(el); });
+    })();
+
+    /* Buying / selling track switch. Runs after the reveal observer above so a
+       track that starts hidden is still being watched when it is shown. */
+    (function () {
+      var buy = document.getElementById('track-buy');
+      var sell = document.getElementById('track-sell');
+      var cards = [].slice.call(document.querySelectorAll('.fork-card'));
+      if (!buy || !sell || !cards.length) return;
+
+      function setTrack(track, fromClick) {
+        var showSell = (track === 'sell');
+        var shown = showSell ? sell : buy;
+        buy.hidden = showSell;
+        sell.hidden = !showSell;
+        cards.forEach(function (c) {
+          c.setAttribute('aria-pressed', c.getAttribute('data-track') === track ? 'true' : 'false');
+        });
+        try { localStorage.setItem('rewb-track', track); } catch (e) {}
+        if (fromClick) {
+          /* Guarantee the newly shown sections are visible even if the observer
+             has not fired for them yet, then bring the track into view. */
+          shown.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+          shown.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      cards.forEach(function (c) {
+        c.addEventListener('click', function () {
+          setTrack(c.getAttribute('data-track'), true);
+        });
+      });
+
+      /* A link to #sell or #faq-sell should land on the selling track. */
+      var initial = 'buy';
+      if (/sell/i.test(location.hash)) {
+        initial = 'sell';
+      } else {
+        try {
+          var saved = localStorage.getItem('rewb-track');
+          if (saved === 'buy' || saved === 'sell') initial = saved;
+        } catch (e) {}
+      }
+      setTrack(initial, false);
     })();
   </script>
 
