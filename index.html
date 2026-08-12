@@ -201,6 +201,23 @@
     .stat-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; margin-top: 0.15rem; }
 
     /* ========================================================
+       FORK — buying or selling chooser
+    ======================================================== */
+    section[id] { scroll-margin-top: 4.5rem; }
+    .fork { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+    @media (min-width: 620px) { .fork { grid-template-columns: 1fr 1fr; } }
+    .fork-card {
+      display: block;
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 12px; padding: 1.25rem 1.15rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .fork-card:hover { border-color: var(--accent); background: #fff; }
+    .fork-name { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); line-height: 1.25; margin-bottom: 0.4rem; }
+    .fork-desc { font-size: 0.85rem; line-height: 1.55; margin-bottom: 0.9rem; }
+    .fork-go { font-size: 0.8rem; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
+
+    /* ========================================================
        TWO JOURNEYS (comparison)
     ======================================================== */
     .vs-title-line {
@@ -541,6 +558,30 @@
           <div><div class="stat-num">Free</div><div class="stat-label">Discovery call. No cost to start</div></div>
         </div>
 
+      </div>
+    </section>
+
+    <div class="wrap"><div class="rule"></div></div>
+
+    <!-- ===================== FORK ===================== -->
+    <section id="fork" style="padding-top:0;">
+      <div class="wrap reveal">
+        <div class="eyebrow">Which side are you on?</div>
+        <div class="fork">
+
+          <a class="fork-card" href="#journey" data-goatcounter-click="fork-buying">
+            <div class="fork-name">If you're buying</div>
+            <div class="fork-desc">I research the market, shortlist what's worth your money, and negotiate for you. No developer pays me to steer you anywhere.</div>
+            <div class="fork-go">See how buying works →</div>
+          </a>
+
+          <a class="fork-card" href="#sell" data-goatcounter-click="fork-selling">
+            <div class="fork-name">If you're selling</div>
+            <div class="fork-desc">One exclusive mandate and the whole sale leaves your desk. Every call, every site visit, every negotiation handled by my team.</div>
+            <div class="fork-go">See how selling works →</div>
+          </a>
+
+        </div>
       </div>
     </section>
 
